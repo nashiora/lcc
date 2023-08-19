@@ -11,6 +11,7 @@
 #include <lcc/target.hh>
 #include <lcc/utils.hh>
 #include <string>
+#include <intercept/codegen.hh>
 
 namespace detail {
 void aluminium_handler() {
@@ -73,19 +74,23 @@ int main(int argc, char** argv) {
     if (path_str.ends_with(".int")) {
         /// Parse the file.
         auto mod = lcc::intercept::Parser::Parse(&context, file);
+        if (context.has_error()) std::exit(1);
         if (options::get<"--syntax-only">()) {
-            if (context.has_error()) std::exit(1);
             if (options::get<"--ast">()) mod->print();
             std::exit(0);
         }
 
         /// Perform semantic analysis.
         lcc::intercept::Sema::Analyse(&context, *mod, true);
+        if (context.has_error()) std::exit(1);
         if (options::get<"--ast">()) {
-            if (context.has_error()) std::exit(1);
             mod->print();
             std::exit(0);
         }
+
+        /// Generate an LCC module.
+        auto lcc_mod = lcc::intercept::CodeGen::Generate(lcc_mod);
+        lcc_mod->print();
 
         return 42;
     }

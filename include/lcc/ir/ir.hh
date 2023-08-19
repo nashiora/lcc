@@ -84,6 +84,7 @@ public:
 
     /// Disallow allocating these directly.
     void* operator new(size_t) = delete;
+    void* operator new(size_t, Module&);
 
     /// Get the kind of this value for RTTI.
     Kind kind() const { return value_kind; }

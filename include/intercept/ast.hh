@@ -128,6 +128,7 @@ public:
 private:
     std::string name{};
 
+    Context* ctx;
     FuncDecl* top_level_function{};
     bool is_module;
     File* file;
@@ -139,8 +140,7 @@ private:
     usz lambda_counter = 0;
 
 public:
-    Module(File* file, std::string module_name, bool is_logical_module);
-
+    Module(Context* ctx, File* file, std::string module_name, bool is_logical_module);
     ~Module();
 
     /// Add an export.
@@ -156,6 +156,9 @@ public:
 
     /// Add a top-level expression.
     void add_top_level_expr(Expr* node);
+
+    /// Get the context that owns this module.
+    auto context() const -> Context* { return ctx; }
 
     /// Get the functions that are part of this module.
     auto functions() -> std::vector<FuncDecl*>& { return _functions; }
@@ -406,6 +409,9 @@ public:
 
     /// Check if this is the builtin \c void type.
     bool is_void() const;
+
+    /// Get the LCC type corresponding to this type.
+    auto lcc() -> lcc::Type*;
 
     /// Get the location of this type.
     auto location() const { return _location; }

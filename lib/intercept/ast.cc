@@ -12,10 +12,11 @@ namespace intc = lcc::intercept;
 ///  Module
 /// ===========================================================================
 intc::Module::Module(
+    Context* ctx,
     File* file,
     std::string module_name,
     bool is_logical_module
-) : name{std::move(module_name)}, is_module{is_logical_module}, file{file} {
+) : name{std::move(module_name)}, ctx{ctx}, is_module{is_logical_module}, file{file} {
     FuncType* ty{};
 
     /// Create the type of the top-level function.

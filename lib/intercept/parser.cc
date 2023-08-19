@@ -902,13 +902,13 @@ auto intc::Parser::ParsePreamble(File& f) -> Result<void> {
     if (At(Tk::Ident) and tok.text == "module" and not tok.artificial) {
         NextToken(); /// Yeet "module".
         if (not At(Tk::Ident)) return Error("Expected module name");
-        mod = std::make_unique<Module>(&f, tok.text, true);
+        mod = std::make_unique<Module>(context, &f, tok.text, true);
         NextToken(); /// Yeet module name.
     }
 
     /// Create an executable module instead.
     else {
-        mod = std::make_unique<Module>(&f, "", false);
+        mod = std::make_unique<Module>(context, &f, "", false);
     }
 
     while (At(Tk::Semicolon)) NextToken();
